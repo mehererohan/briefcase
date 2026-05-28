@@ -6,6 +6,7 @@ import { enrichCompany } from '../lib/companylens';
 import { checkBreachHistory } from '../lib/supabase';
 import { callGemini } from '../lib/gemini';
 import { OASIS_SYSTEM_PROMPT, buildBriefingPrompt } from '../lib/prompts';
+import { logProspectToSheets, signOutGoogle } from '../lib/sheets';
 
 const MEETING_TYPES = ['Cold Outreach', 'Follow-up', 'Discovery Call', 'Product Demo'];
 const HISTORY_KEY = 'briefcase-history';
@@ -166,7 +167,7 @@ const COPYABLE_SECTIONS = [
   { heading: 'Cold Email Draft', label: 'Copy Email Draft' },
 ];
 
-function BriefingResult({ result }) {
+function BriefingResult({ result, onSaveToSheets, savingToSheets, savedToSheets, sheetsError }) {
   const sectionTexts = COPYABLE_SECTIONS.reduce((acc, { heading }) => {
     acc[heading] = extractSection(result, heading);
     return acc;
@@ -205,6 +206,21 @@ function BriefingResult({ result }) {
           );
         })}
       </div>
+
+      <div className="mt-8 pt-6 border-t border-gray-200">
+        <button
+          onClick={onSaveToSheets}
+          disabled={savingToSheets || savedToSheets}
+          className={`w-full py-3 rounded-lg text-white text-sm font-medium transition-colors disabled:cursor-not-allowed ${
+            savedToSheets
+              ? 'bg-green-400 cursor-default'
+              : 'bg-[#16a34a] hover:bg-green-700 disabled:opacity-60'
+          }`}
+        >
+          {savingToSheets ? 'Saving...' : savedToSheets ? 'Saved to Sheets ✓' : 'Save to Sheets'}
+        </button>
+        {sheetsError && <p className="mt-2 text-red-600 text-sm">{sheetsError}</p>}
+      </div>
     </div>
   );
 }
@@ -218,6 +234,9 @@ export default function Module1() {
   const [loadingMessage, setLoadingMessage] = useState('');
   const [result, setResult] = useState('');
   const [error, setError] = useState('');
+  const [savedToSheets, setSavedToSheets] = useState(false);
+  const [savingToSheets, setSavingToSheets] = useState(false);
+  const [sheetsError, setSheetsError] = useState('');
   const [history, setHistory] = useState(loadHistory);
   const mainRef = useRef(null);
   const nameRef = useRef(null);
@@ -304,11 +323,44 @@ export default function Module1() {
 
       setHistory(prev => [entry, ...prev].slice(0, HISTORY_LIMIT));
       setResult(briefing);
+      setSavedToSheets(false);
+      setSheetsError('');
       mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       setError(err.message || 'Something went wrong.');
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleSaveToSheets() {
+    setSavingToSheets(true);
+    setSheetsError('');
+    setSavedToSheets(false);
+
+    try {
+      const icpMatch = result.match(/(\d(?:\.\d)?)\s*\/\s*5/);
+      const icpScore = icpMatch ? icpMatch[1] + '/5' : 'N/A';
+      const linkedinNote = extractSection(result, 'LinkedIn Connection Note');
+      const coldEmail = extractSection(result, 'Cold Email Draft');
+
+      await logProspectToSheets({
+        name,
+        title,
+        company,
+        meetingType,
+        icpScore,
+        linkedinNote,
+        coldEmail,
+        status: 'Ready to Send',
+        dateAdded: new Date().toISOString().split('T')[0],
+      });
+
+      setSavedToSheets(true);
+    } catch (err) {
+      setSheetsError(err.message || 'Failed to save to Sheets.');
+    } finally {
+      setSavingToSheets(false);
     }
   }
 
@@ -437,7 +489,15 @@ export default function Module1() {
               </div>
             )}
 
-            {result && !loading && <BriefingResult result={result} />}
+            {result && !loading && (
+              <BriefingResult
+                result={result}
+                onSaveToSheets={handleSaveToSheets}
+                savingToSheets={savingToSheets}
+                savedToSheets={savedToSheets}
+                sheetsError={sheetsError}
+              />
+            )}
           </div>
         </main>
       </div>
