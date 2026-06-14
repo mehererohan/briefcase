@@ -1,10 +1,12 @@
 import { BrowserRouter, Routes, Route, NavLink, Navigate } from 'react-router-dom';
 import Module1 from './pages/Module1';
 import Module2 from './pages/Module2';
+import Module3 from './pages/Module3';
 
 const NAV_ITEMS = [
   { to: '/module1', label: 'Prospect Briefing' },
   { to: '/module2', label: 'Pitch Builder' },
+  { to: '/module3', label: 'Call Debrief' },
 ];
 
 export function AppHeader() {
@@ -44,6 +46,7 @@ export default function App() {
         <Route path="/" element={<Navigate to="/module1" replace />} />
         <Route path="/module1" element={<Module1 />} />
         <Route path="/module2" element={<Module2 />} />
+        <Route path="/module3" element={<Module3 />} />
       </Routes>
     </BrowserRouter>
   );
