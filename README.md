@@ -7,11 +7,11 @@ Briefcase is an AI-powered sales intelligence platform that helps GTM teams rese
 
 | Module | Description |
 |--------|-------------|
-| **Module 1 — Prospect Briefing Generator** | Researches a prospect across the web, enriches company data, checks breach history, and generates a tailored GTM briefing with outreach copy |
-| **Module 2 — ICP Scoring Engine** | Scores inbound leads against your ideal customer profile using enriched firmographic and technographic signals |
-| **Module 3 — Outreach Sequencer** | Generates multi-step email and LinkedIn sequences personalized to each prospect's role, company, and pain points |
-| **Module 4 — Call Intelligence** | Summarizes sales calls, extracts action items, and maps conversation themes to product value props |
-| **Module 5 — Pipeline Dashboard** | Tracks prospect status, outreach activity, and briefing history with CRM-style views and Sheets sync |
+| **Module 1 — Prospect Briefing Generator** | Researches a prospect via Tavily, Exa, CompanyLens, and HHS breach data, then generates a 9-section GTM briefing with LinkedIn note, cold email, and discovery questions |
+| **Module 2 — Persona-Based Pitch Builder** | Generates tailored talking points, objection handling, and a language guide for a specific role (CISO, CFO, IT Admin, etc.) at a target company |
+| **Module 3 — Discovery Call Debrief** | Paste raw call notes and get structured pain points, buying signals, objections, next steps, and a CRM-ready summary |
+| **Module 4 — Champion Tracker** | Lightweight CRM view of active prospects and champions, with status tracking, last touchpoint, AI-suggested next actions, and HubSpot integration |
+| **Module 5 — Customer Feedback Analyzer** | Analyzes B2C user feedback to surface themes, feature requests, and champions worth nurturing for B2C2B conversion |
 
 ## Tech Stack
 
@@ -62,8 +62,8 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 | Module | Status |
 |--------|--------|
-| Module 1 — Prospect Briefing Generator | Complete |
-| Module 2 — ICP Scoring Engine | In progress |
-| Module 3 — Outreach Sequencer | In progress |
-| Module 4 — Call Intelligence | In progress |
-| Module 5 — Pipeline Dashboard | In progress |
+| Module 1 — Prospect Briefing Generator | ✅ Complete |
+| Module 2 — Persona-Based Pitch Builder | ✅ Complete |
+| Module 3 — Discovery Call Debrief | ✅ Complete |
+| Module 4 — Champion Tracker | 🔄 In progress |
+| Module 5 — Customer Feedback Analyzer | 🔄 In progress |
