@@ -7,6 +7,7 @@ import { checkBreachHistory } from '../lib/supabase';
 import { callGemini } from '../lib/gemini';
 import { OASIS_SYSTEM_PROMPT, buildBriefingPrompt } from '../lib/prompts';
 import { logProspectToSheets, signOutGoogle } from '../lib/sheets';
+import { AppHeader } from '../App';
 
 const MEETING_TYPES = ['Cold Outreach', 'Follow-up', 'Discovery Call', 'Product Demo'];
 const HISTORY_KEY = 'briefcase-history';
@@ -376,10 +377,7 @@ export default function Module1() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <header className="bg-[#0f172a] px-8 py-5 flex-shrink-0">
-        <h1 className="text-2xl font-bold text-white tracking-tight">Briefcase</h1>
-        <p className="text-slate-400 text-sm mt-0.5">GTM intelligence for modern sales teams</p>
-      </header>
+      <AppHeader />
 
       <div className="flex flex-1 overflow-hidden">
         <aside
